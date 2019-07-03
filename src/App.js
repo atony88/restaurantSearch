@@ -4,15 +4,38 @@ import './App.css'
 class App extends PureComponent {
   state = {
       city: '',
+      restaurants: [],
+      list: [],
   }
 
-  getRestaurantsList = (city) => {
-    console.log('The city is ', city)
+  displayRestaurants = (restaurants) => {
+    let list = []
+    restaurants.map((restaurant, index) => {
+      list[index] = {
+        name: restaurant.name,
+        address: restaurant.address,
+        price: restaurant.price,
+      }
+      return list
+    })
+    this.setState({ list: list})
+  }
+
+  fetchData = (city) => {
+    fetch(`http://opentable.herokuapp.com/api/restaurants?city=${city}`)
+      .then(result => result.json())
+      .then((data) => {
+        this.setState({
+          restaurants: data.restaurants,
+        })
+        this.displayRestaurants(data.restaurants)
+      })
+      .catch(console.log)
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.getRestaurantsList(this.state.city)
+    this.fetchData(this.state.city)
   }
 
   handleChange = (event) => {
@@ -41,9 +64,22 @@ class App extends PureComponent {
             className="app-form__submit-button"
           />
         </form>
-        <div className="app-result">
-          The city you entered is {this.state.city}
-        </div>
+        {
+          this.state.list.length !== 0 &&
+            <ul className="app-result">
+              {
+                this.state.list.map((item, index) =>
+                  <li>
+                    <div className="name">
+                      { item.name } <br />
+                    </div>
+                    { item.address } <br />
+                    price: { item.price } <br />
+                    <br />
+                  </li>)
+              }
+            </ul>
+        }
       </div>
     );
   }

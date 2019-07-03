@@ -37,3 +37,19 @@
   color: white;
   background-color: #ec9797;
 }
+
+.app-result {
+  overflow-y: scroll;
+  max-height: 350px;
+  padding: 10px;
+  margin: 20px;
+  background-color: white;
+  color: black;
+  font-size: 14px;
+  text-align: center;
+}
+
+.name {
+  font-size: 17px;
+  font-weight: 700;
+}
