@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
+import { addRestaurants } from './state/actions'
 import './App.css'
 
 class App extends PureComponent {
@@ -6,6 +8,17 @@ class App extends PureComponent {
       city: '',
       restaurants: [],
       list: [],
+  }
+
+  saveToStore = (list) => {
+    list.map(restaurant => {
+      this.props.addRestaurants({
+        name: restaurant.name,
+        address: restaurant.address,
+        area: restaurant.area,
+      })
+      return undefined
+    })
   }
 
   displayRestaurants = (restaurants) => {
@@ -29,6 +42,7 @@ class App extends PureComponent {
           restaurants: data.restaurants,
         })
         this.displayRestaurants(data.restaurants)
+        this.saveToStore(data.restaurants)
       })
       .catch(console.log)
   }
@@ -85,4 +99,6 @@ class App extends PureComponent {
   }
 }
 
-export default App
+const mapDispatchToProps = { addRestaurants }
+
+export default connect(undefined, mapDispatchToProps)(App)

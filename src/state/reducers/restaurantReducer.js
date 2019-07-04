@@ -1,12 +1,13 @@
-// import { addRestaurants } from '../actions'
-
-const initialState = []
+const initialState = {
+  list: []
+}
 
 export function restaurants(state = initialState, action) {
   if (action.type === 'ADD_RESTAURANTS') {
-      return Object.assign({}, state, {
-        restaurants: state.restaurants,
-      });
+      return {
+        ...state,
+        list: state.list.concat(action.payload),
+      }
     }
 
   return state
