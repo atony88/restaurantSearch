@@ -69,7 +69,7 @@ class App extends PureComponent {
             <ul className="app-result">
               {
                 this.state.list.map((item, index) =>
-                  <li>
+                  <li key={index}>
                     <div className="name">
                       { item.name } <br />
                     </div>
