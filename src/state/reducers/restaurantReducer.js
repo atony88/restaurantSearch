@@ -8,6 +8,13 @@ export function restaurants(state = initialState, action) {
         ...state,
         list: state.list.concat(action.payload),
       }
+    } else {
+      if (action.type === 'CLEAR_LIST') {
+        return {
+          ...state,
+          list: [],
+        }
+      }
     }
 
   return state

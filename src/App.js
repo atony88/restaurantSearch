@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { addRestaurants } from './state/actions'
+import { addRestaurants, clearList } from './state/actions'
 import './App.css'
 
 class App extends PureComponent {
@@ -8,9 +8,15 @@ class App extends PureComponent {
       city: '',
       restaurants: [],
       list: [],
+      filter: '',
+  }
+
+  clearList = () => {
+    this.props.clearList()
   }
 
   saveToStore = (list) => {
+    this.clearList()
     list.map(restaurant => {
       this.props.addRestaurants({
         name: restaurant.name,
@@ -21,7 +27,12 @@ class App extends PureComponent {
     })
   }
 
-  displayRestaurants = (restaurants) => {
+  refineSearch = (list, filteredItem) => {
+    const refinedResult = this.props.storedList.filter( list => list.address.toLowerCase().includes(filteredItem) || list.name.toLowerCase().includes(filteredItem) || list.area.toLowerCase().includes(filteredItem) )
+    this.setState({ list: refinedResult })
+  }
+
+  citySearch = (restaurants) => {
     let list = []
     restaurants.map((restaurant, index) => {
       list[index] = {
@@ -31,7 +42,16 @@ class App extends PureComponent {
       }
       return list
     })
+
     this.setState({ list: list})
+  }
+
+  displayRestaurants = (restaurants) => {
+    if (!this.state.filter) {
+      this.citySearch(restaurants)
+    } else {
+      this.refineSearch(restaurants, this.state.filter)
+    }
   }
 
   fetchData = (city) => {
@@ -41,19 +61,23 @@ class App extends PureComponent {
         this.setState({
           restaurants: data.restaurants,
         })
-        this.displayRestaurants(data.restaurants)
         this.saveToStore(data.restaurants)
+        this.displayRestaurants(data.restaurants)
       })
       .catch(console.log)
   }
 
   handleSubmit = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     this.fetchData(this.state.city)
   }
 
   handleChange = (event) => {
     this.setState({ city: event.target.value })
+  }
+
+  handleFilter = (event) => {
+    this.setState({ filter: event.target.value.toLowerCase() })
   }
   render () {
     return (
@@ -68,6 +92,14 @@ class App extends PureComponent {
               name="name"
               value={this.state.city}
               onChange={this.handleChange}
+              className="app-form__input"
+            />
+            <input
+              placeholder="Optional refine"
+              type="text"
+              name="name"
+              value={this.state.filter}
+              onChange={this.handleFilter}
               className="app-form__input"
             />
           </label>
@@ -99,6 +131,10 @@ class App extends PureComponent {
   }
 }
 
-const mapDispatchToProps = { addRestaurants }
+const mapStateToProps = ({ restaurants }) => ({
+  storedList: restaurants.list,
+})
 
-export default connect(undefined, mapDispatchToProps)(App)
+const mapDispatchToProps = { addRestaurants, clearList }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

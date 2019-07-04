@@ -1,1 +1,2 @@
 export const ADD_RESTAURANTS = 'ADD_RESTAURANTS'
+export const CLEAR_LIST = 'CLEAR_LIST'
