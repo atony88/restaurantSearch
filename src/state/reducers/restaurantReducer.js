@@ -1,21 +1,26 @@
 const initialState = {
-  list: []
+  displayList: [],
+  list: [],
 }
 
 export function restaurants(state = initialState, action) {
-  if (action.type === 'ADD_RESTAURANTS') {
+  switch(action.type) {
+    case 'ADD_RESTAURANTS':
       return {
         ...state,
         list: state.list.concat(action.payload),
       }
-    } else {
-      if (action.type === 'CLEAR_LIST') {
-        return {
-          ...state,
-          list: [],
-        }
+    case 'CLEAR_LIST':
+      return {
+        ...state,
+        list: [],
       }
-    }
-
-  return state
+    case 'ADD_DISPLAYLIST':
+      return {
+        ...state,
+        displayList: action.payload,
+      }
+    default:
+      return state
+  }
 }

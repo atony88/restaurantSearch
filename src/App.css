@@ -41,7 +41,7 @@
 
 .app-result {
   overflow-y: scroll;
-  max-height: 350px;
+  max-height: 55%;
   padding: 10px;
   margin: 20px;
   background-color: white;
